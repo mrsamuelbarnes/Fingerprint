@@ -24,15 +24,8 @@ contract Fingerprint {
     owner = msg.sender;
   }
 
-  // Change the owner of the contract
-  function changeOwner (address newOwner) {
-
-    // Change the owner address if the sender is the current owner
-    if (owner == msg.sender){ owner = newOwner; }
-  }
-
   // Attempt to create a new ownership record
-  function newRecord (string fileHash, string name, string author, string filename, string description) {
+  function newRecord (string fileHash, string name, string author, string filename, string description) returns (bool success) {
 
     // Check the hash is of the correct length
     if (bytes(fileHash).length == 64) {
@@ -45,7 +38,13 @@ contract Fingerprint {
 
       // Increment the record count
       recordCount++;
+
+      // The record was created
+      return true;
     }
+
+    // Record creation failed
+    return false;
   }
 
   // Get a filehash belonging to an address
