@@ -6,8 +6,9 @@ contract Fingerprint {
   // Contract owner
   address public owner;
 
-  // Number of ownership records
-  uint public recordCount = 0;
+  // Mapping for record count for a particular address
+  // Owner address -> owned records
+  mapping (address => uint) recordCount;
 
   // Mapping for hash access
   // Owner address -> File hashes
@@ -37,7 +38,7 @@ contract Fingerprint {
       records[msg.sender][fileHash] = Ownership(name, author, filename, description, now);
 
       // Increment the record count
-      recordCount++;
+      recordCount[msg.sender]++;
 
       // The record was created
       return true;
@@ -45,6 +46,11 @@ contract Fingerprint {
 
     // Record creation failed
     return false;
+  }
+
+  // Get the number of records belonging to an address
+  function getRecordCount (address owner) constant returns (uint) {
+    return recordCount[owner];
   }
 
   // Get a filehash belonging to an address
