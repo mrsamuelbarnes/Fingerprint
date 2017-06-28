@@ -28,20 +28,24 @@ contract Fingerprint {
   // Attempt to create a new ownership record
   function newRecord (string fileHash, string name, string author, string filename, string description) returns (bool success) {
 
-    // Check the hash is of the correct length
-    if (bytes(fileHash).length == 64) {
+    // Check a record doesn't already belong to the owner for that hash
+    if (records[msg.sender][fileHash].timestamp == uint(0x0)) {
 
-      // Add the hash record
-      hashes[msg.sender].push(fileHash);
+      // Check the hash is of the correct length
+      if (bytes(fileHash).length == 64) {
 
-      // Add the ownership record
-      records[msg.sender][fileHash] = Ownership(name, author, filename, description, now);
+        // Add the hash record
+        hashes[msg.sender].push(fileHash);
 
-      // Increment the record count
-      recordCount[msg.sender]++;
+        // Add the ownership record
+        records[msg.sender][fileHash] = Ownership(name, author, filename, description, now);
 
-      // The record was created
-      return true;
+        // Increment the record count
+        recordCount[msg.sender]++;
+
+        // The record was created
+        return true;
+      }
     }
 
     // Record creation failed
